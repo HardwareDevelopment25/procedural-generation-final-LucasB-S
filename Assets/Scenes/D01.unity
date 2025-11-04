@@ -148,7 +148,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8804839297fb5d4181abc308a485efe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CaveWidthAndHeight: 50
+  CaveWidthAndHeight: 51
   seed: 100
   WallPrefab: {fileID: 4446594457811226741, guid: a9e22695d2fe4224cbab58b4ca07004c, type: 3}
   FloorPrefab: {fileID: 2594049216804198002, guid: f90b3622052d3f84c833f3c0ab7ce9c6, type: 3}

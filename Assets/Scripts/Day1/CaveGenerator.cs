@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class CaveGenerator : MonoBehaviour
 {
-    public int CaveWidthAndHeight;
+    public int CaveWidthAndHeight; // Has to be odd if you want outer maze perimeter to be 1 wall thick
     private int caveWidth;
     private int caveHeight;
     public int seed;
@@ -24,7 +24,7 @@ public class CaveGenerator : MonoBehaviour
 
     private void Awake()
     {
-        rand = new System.Random(seed);
+        rand = new System.Random();
     }
     void Start()
     {
@@ -51,7 +51,7 @@ public class CaveGenerator : MonoBehaviour
 
             if (directions.Count > 0)
             {
-                int move = rand.Next(0, directions.Count - 1);
+                int move = rand.Next(0, directions.Count);
 
                 switch (directions[move])
                 {
@@ -86,9 +86,8 @@ public class CaveGenerator : MonoBehaviour
             }
             else
             {
-                minerPath.Pop();
+                minerPos = minerPath.Pop();
             }
-
 
             directions = new List<int>(0);
         }
@@ -102,10 +101,10 @@ public class CaveGenerator : MonoBehaviour
         if (minerPos.x + 2 < caveWidth - 1 && caveGrid[minerPos.x + 2, minerPos.y] == false) //Right
             directions.Add(1);
 
-        if (minerPos.y - 2 > 1 && caveGrid[minerPos.x, minerPos.y - 2] == false) //Down
+        if (minerPos.y - 1 > 1 && caveGrid[minerPos.x, minerPos.y - 2] == false) //Down
             directions.Add(2);
 
-        if (minerPos.x - 2 > 1 && caveGrid[minerPos.x - 2, minerPos.y] == false) //Left
+        if (minerPos.x - 1 > 1 && caveGrid[minerPos.x - 2, minerPos.y] == false) //Left
             directions.Add(3);
     }
 
