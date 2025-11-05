@@ -10,8 +10,8 @@ public class CaveGenerator : MonoBehaviour
     private int caveHeight;
     public int seed;
 
-    private List<int> directions = new List<int>(0);
-    private Stack<Vector2Int> minerPath = new Stack<Vector2Int>(0);
+    private List<int> directions = new List<int>();
+    private Stack<Vector2Int> minerPath = new Stack<Vector2Int>();
 
     private bool[,] caveGrid;
     private Vector2Int minerPos;
@@ -24,7 +24,7 @@ public class CaveGenerator : MonoBehaviour
 
     private void Awake()
     {
-        rand = new System.Random();
+        rand = new System.Random(seed);
     }
     void Start()
     {
@@ -86,7 +86,9 @@ public class CaveGenerator : MonoBehaviour
             }
             else
             {
-                minerPos = minerPath.Pop();
+                minerPath.Pop();
+                if(minerPath.Count > 0)
+                    minerPos = minerPath.Peek();
             }
 
             directions = new List<int>(0);
