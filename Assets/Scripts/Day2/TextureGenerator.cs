@@ -1,0 +1,113 @@
+using System;
+using System.Security.Cryptography;
+using Unity.VisualScripting;
+using UnityEngine;
+using UnityEngine.UI;
+
+public class TextureGenerator : MonoBehaviour
+{
+    private int textureSize = 256;
+    public float scale;
+    private Texture2D texture;
+
+    [SerializeField]
+    public AnimationCurve falloffCurve = new AnimationCurve();
+
+    [System.Serializable]
+    public struct TerrainType
+    {
+        public string name;
+        public float height;
+        public Color color;
+    }
+
+    public TerrainType[] terrainTypes;
+
+    private void Start()
+    {
+        texture = new Texture2D(textureSize, textureSize);
+
+        CreateLayeredPerlinPatteren();
+        GetComponent<MeshRenderer>().material.mainTexture = texture;
+
+    }
+    private void CreateFractalPatteren()
+    {
+        for (int x = 0; x < texture.width; x++)
+        {
+            for (int y = 0; y < texture.height; y++)
+            {
+                Color color = ((x & y) != 0) ? Color.white : Color.black;
+                texture.SetPixel(x, y, color);
+            }
+        }
+
+        texture.Apply();
+    }
+
+    private void CreateRandomPatteren()
+    {
+        for (int x = 0; x < texture.width; x++)
+        {
+            for (int y = 0; y < texture.height; y++)
+            {
+                Color color = UnityEngine.Random.value > 0.5f ? Color.white : Color.black;
+                texture.SetPixel(x, y, color);
+            }
+        }
+        texture.Apply();
+    }
+
+    private void CreatePerlinPatteren()
+    {
+        for (int x = 0; x < texture.width; x++)
+        {
+            for (int y = 0; y < texture.height; y++)
+            {
+                float xCoord = (float)x / texture.width * scale;
+                float yCoord = (float)y / texture.height * scale;
+                float sample = Mathf.PerlinNoise(xCoord, yCoord);
+                Color color = new Color(sample, sample, sample);
+                texture.SetPixel(x, y, color);
+            }
+        }
+        texture.Apply();
+    }
+
+    private void CreateLayeredPerlinPatteren()
+    {
+        float[,] nm = NoiseMapGenerator.GenerateNoiseMap(textureSize, textureSize, scale, 4, 2, 0.5f, 42, Vector2.zero);
+        float[,] falloffMap = NoiseMapGenerator.GenerateFalloffMap(textureSize, falloffCurve);
+        
+        float[,] finalMap = new float[textureSize, textureSize];
+        for (int x = 0; x < textureSize; x++)
+        {
+            for (int y = 0; y < textureSize; y++)
+            {
+                finalMap[x, y] = Mathf.Clamp01(nm[x, y] - falloffMap[x, y]);
+            }
+        }
+
+
+        for (int x = 0; x < texture.width; x++)
+        {
+            for (int y = 0; y < texture.height; y++)
+            {
+                float sample = finalMap[x, y];
+                Color color = Color.black;
+
+                for (int i = 0; i < terrainTypes.Length; i++)
+                {
+                    if (sample <= terrainTypes[i].height)
+                    {
+                        color = terrainTypes[i].color;
+                        break;
+                    }
+                }
+                texture.SetPixel(x, y, color);
+            }
+        }
+
+        texture.Apply();
+    }
+}

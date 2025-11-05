@@ -91,7 +91,7 @@ public class CaveGenerator : MonoBehaviour
                     minerPos = minerPath.Peek();
             }
 
-            directions = new List<int>(0);
+            directions.Clear();
         }
     }
 
