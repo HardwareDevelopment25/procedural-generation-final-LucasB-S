@@ -6,6 +6,8 @@ using UnityEngine.UI;
 
 public class TextureGenerator : MonoBehaviour
 {
+    float[,] finalMap;
+
     private int textureSize = 256;
     public float scale;
     private Texture2D texture;
@@ -28,8 +30,11 @@ public class TextureGenerator : MonoBehaviour
         texture = new Texture2D(textureSize, textureSize);
 
         CreateLayeredPerlinPatteren();
-        GetComponent<MeshRenderer>().material.mainTexture = texture;
 
+        MeshFilter meshFilter = gameObject.AddComponent<MeshFilter>();
+        meshFilter.mesh = MeshGenerator.GenerateGridMesh(finalMap, 10, falloffCurve).CreateMesh();
+
+        GetComponent<MeshRenderer>().material.mainTexture = texture;
     }
     private void CreateFractalPatteren()
     {
@@ -74,12 +79,12 @@ public class TextureGenerator : MonoBehaviour
         texture.Apply();
     }
 
-    private void CreateLayeredPerlinPatteren()
+    public void CreateLayeredPerlinPatteren()
     {
-        float[,] nm = NoiseMapGenerator.GenerateNoiseMap(textureSize, textureSize, scale, 4, 2, 0.5f, 42, Vector2.zero);
+        float[,] nm = NoiseMapGenerator.GenerateNoiseMap(textureSize, textureSize, scale, 6, 2f, 0.5f, 42, Vector2.zero);
         float[,] falloffMap = NoiseMapGenerator.GenerateFalloffMap(textureSize, falloffCurve);
         
-        float[,] finalMap = new float[textureSize, textureSize];
+        finalMap = new float[textureSize, textureSize];
         for (int x = 0; x < textureSize; x++)
         {
             for (int y = 0; y < textureSize; y++)
