@@ -8,7 +8,7 @@ public class TextureGenerator : MonoBehaviour
 {
     float[,] finalMap;
 
-    private int textureSize = 256;
+    public int textureSize = 256;
     public float scale;
     private Texture2D texture;
 

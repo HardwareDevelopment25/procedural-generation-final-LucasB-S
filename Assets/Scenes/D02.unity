@@ -363,76 +363,59 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eca4abb74b3de8141b452a07967b7aaf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  textureSize: 256
   scale: 50
   falloffCurve:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 2
-      outSlope: 2
+      time: 0.008384705
+      value: -0.0047912598
+      inSlope: 0.053371377
+      outSlope: 0.053371377
       tangentMode: 0
       weightedMode: 0
       inWeight: 0
-      outWeight: 0
+      outWeight: 0.43516424
     - serializedVersion: 3
-      time: 0.34021217
-      value: 0.12961309
-      inSlope: 1.68624
-      outSlope: 1.68624
+      time: 0.5852775
+      value: 0.11343977
+      inSlope: 0.85454607
+      outSlope: 0.85454607
       tangentMode: 0
       weightedMode: 0
       inWeight: 0.33333334
-      outWeight: 0.33333334
+      outWeight: 1
     - serializedVersion: 3
-      time: 0.6538063
-      value: 0.37617624
-      inSlope: 0.2076446
-      outSlope: 0.2076446
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 0.9610303
-      value: 0.6841288
-      inSlope: 1.4080899
-      outSlope: 1.4080899
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 1
+      time: 1.0041199
       value: 1
-      inSlope: 0
-      outSlope: 0
+      inSlope: 3.578528
+      outSlope: 3.578528
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0
+      inWeight: 0.10848271
       outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
   terrainTypes:
   - name: DeepVoid
-    height: 0.2
+    height: 0.1
     color: {r: 0.066037714, g: 0.066037714, b: 0.066037714, a: 0}
   - name: Void
     height: 0.3
     color: {r: 0.18867922, g: 0.18867922, b: 0.18867922, a: 0}
   - name: IslandEdge
-    height: 0.4
+    height: 0.3
     color: {r: 0.6698113, g: 0.47192323, b: 0, a: 0}
   - name: IslandPerimeter
-    height: 0.6
+    height: 0.4
     color: {r: 0.8207547, g: 0.5759682, b: 0, a: 0}
   - name: MountainBase
-    height: 0.7
+    height: 0.8
     color: {r: 0.745283, g: 0.64663243, b: 0.08085619, a: 0}
   - name: MountainMid
-    height: 0.8
+    height: 0.9
     color: {r: 0.8490566, g: 0.7441924, b: 0.14017442, a: 0}
   - name: MountainPeak
     height: 1
