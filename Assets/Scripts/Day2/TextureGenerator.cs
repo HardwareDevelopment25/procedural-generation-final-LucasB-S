@@ -6,11 +6,14 @@ using UnityEngine.UI;
 
 public class TextureGenerator : MonoBehaviour
 {
-    float[,] finalMap;
 
     public int textureSize = 256;
     public float scale;
+    [Range(1, 10)]
+    public int LevelOfDetail = 1;
+
     private Texture2D texture;
+    private float[,] finalMap;
 
     [SerializeField]
     public AnimationCurve falloffCurve = new AnimationCurve();
@@ -32,7 +35,7 @@ public class TextureGenerator : MonoBehaviour
         CreateLayeredPerlinPatteren();
 
         MeshFilter meshFilter = gameObject.AddComponent<MeshFilter>();
-        meshFilter.mesh = MeshGenerator.GenerateGridMesh(finalMap, 10, falloffCurve).CreateMesh();
+        meshFilter.mesh = MeshGenerator.GenerateGridMesh(finalMap, 10, falloffCurve, LevelOfDetail).CreateMesh();
 
         GetComponent<MeshRenderer>().material.mainTexture = texture;
     }
