@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class DungeonEdging : MonoBehaviour
@@ -114,32 +113,38 @@ public class DungeonEdging : MonoBehaviour
         Generate();
 
         edges = SimplifiyEdges(GroupNeighbouringEdges(DetectEdges(grid)));
-        MarksSpawnWalls(edges);
+        SpawnWalls();
     }
 
     private List<Edge> SimplifiyEdges(List<Edge> list)
     {
         List<Edge> finalEdges = new();
 
-        Edge edge = new();
-
-        for (int i = 0; i <= list.Count - 1; i++)
+        for (int i = 0; i < list.Count; ++i)
         {
-            edge = list[i];
+            Edge edge = list[i];
 
-            if (list[i].face == 'N' || list[i].face == 'S') // North or South
+            if (edge.face == 'N' || edge.face == 'S') // North or South (horizontal edges)
             {
-                while (i + 1 < list.Count && list[i].start.y == list[i + 1].start.y && (list[i].start.x + 1) == list[i + 1].start.x)
+                // Merge while the next segment is the same face, on the same row, and starts exactly where the current merged edge ends.
+                while (i + 1 < list.Count &&
+                       list[i + 1].face == edge.face &&
+                       list[i + 1].start.y == edge.start.y &&
+                       edge.end.x == list[i + 1].start.x)
                 {
-                    edge.end = list[i].end;
+                    edge.end = list[i + 1].end;
                     i += 1;
                 }
             }
-            else if (list[i].face == 'E' || list[i].face == 'W')
+            else if (edge.face == 'E' || edge.face == 'W') // East or West (vertical edges)
             {
-                while (i + 1 < list.Count && list[i].start.x == list[i + 1].start.x && (list[i].start.y + 1) == list[i + 1].start.y)
+                // Merge while the next segment is the same face, on the same column, and starts exactly where the current merged edge ends.
+                while (i + 1 < list.Count &&
+                       list[i + 1].face == edge.face &&
+                       list[i + 1].start.x == edge.start.x &&
+                       edge.end.y == list[i + 1].start.y)
                 {
-                    edge.end = list[i].end;
+                    edge.end = list[i + 1].end;
                     i += 1;
                 }
             }
@@ -154,6 +159,7 @@ public class DungeonEdging : MonoBehaviour
     {
         List<Edge> edges = new();
 
+        //Loop through grid to find horizontal edges (North & South)
         for (int j = 0; j < mapHeight; j++)
         {
             for (int i = 0; i < mapWidth; i++)
@@ -169,15 +175,24 @@ public class DungeonEdging : MonoBehaviour
                     {
                         edges.Add(new Edge(new Vector2Int(i, j + 1), new Vector2Int(i + 1, j + 1), 'S'));
                     }
+                }
+            }
+        }
 
-                    if (i == mapWidth - 1 || grid[i + 1, j] == false) //East
-                    {
-                        edges.Add(new Edge(new Vector2Int(i + 1, j), new Vector2Int(i + 1, j + 1), 'E'));
-                    }
-
+        //Loop through grid to find vertical edges (East & West)
+        for (int i = 0; i < mapWidth; i++)
+        {
+            for (int j = 0; j < mapHeight; j++)
+            {
+                if (grid[i, j] == true)
+                {
                     if (i == 0 || grid[i - 1, j] == false) //West
                     {
                         edges.Add(new Edge(new Vector2Int(i, j), new Vector2Int(i, j + 1), 'W'));
+                    }
+                    if (i == mapWidth - 1 || grid[i + 1, j] == false) //East
+                    {
+                        edges.Add(new Edge(new Vector2Int(i + 1, j), new Vector2Int(i + 1, j + 1), 'E'));
                     }
                 }
             }
@@ -188,42 +203,28 @@ public class DungeonEdging : MonoBehaviour
 
     private List<Edge> GroupNeighbouringEdges(List<Edge> list)
     {
-        List<Edge> finalList = new();
+        List<Edge> north = new();
+        List<Edge> south = new();
+        List<Edge> east = new();
+        List<Edge> west = new();
 
-        int n = 0;
-        int e = 0;
-        int s = 0;
-        int w = 0;
-
-        foreach (Edge edge in list)
+        foreach (var edge in list)
         {
-            if(edge.face == 'N')
+            switch (edge.face)
             {
-                finalList.Insert(n, edge);
-                n++;
-                e++;
-                s++;
-                w++;
-            }
-            else if(edge.face == 'E')
-            {
-                finalList.Insert(e, edge);
-                e++;
-                s++; 
-                w++;
-            }
-            else if(edge.face == 'S')
-            {
-                finalList.Insert(s, edge);
-                s++;
-                w++;
-            }
-            else
-            {
-                finalList.Insert(w, edge);
-                w++;
+                case 'N': north.Add(edge); break;
+                case 'S': south.Add(edge); break;
+                case 'E': east.Add(edge); break;
+                case 'W': west.Add(edge); break;
+                default: break;
             }
         }
+
+        List<Edge> finalList = new();
+        finalList.AddRange(north);
+        finalList.AddRange(south);
+        finalList.AddRange(east);
+        finalList.AddRange(west);
 
         return finalList;
     }
@@ -239,10 +240,10 @@ public class DungeonEdging : MonoBehaviour
             GameObject obj;
 
             char face = edge.face;
-            if (face == 'N' ||  face == 'S')
+            if (face == 'N' ||  face == 'S') // North or South
             { 
-                size = Math.Abs((edge.start.x - (tileSize / 2)) - edge.end.x + (tileSize / 2)) * tileSize;
-                midPoint = edge.start.x - (tileSize / 2) + ((size + 1) / 2);
+                size = Math.Abs((edge.start.x - edge.end.x) * tileSize);
+                midPoint = edge.start.x + (size / 2) - 0.5f;
 
                 if (face == 'N')
                     rotation = Quaternion.Euler(90, 0, 0);
@@ -251,61 +252,23 @@ public class DungeonEdging : MonoBehaviour
 
                 position = new Vector3(midPoint, 0.5f, edge.start.y - (tileSize / 2));
             }
-            else
+            else // East or West
             {
-                size = Math.Abs(Vector2Int.Distance(edge.start, edge.end) * tileSize);
-
-                midPoint = edge.start.y + (size / 2);
+                size = Math.Abs((edge.start.y - edge.end.y) * tileSize);
+                midPoint = edge.start.y + (size / 2) - 0.5f;
 
                 if (face == 'E')
-                    rotation = Quaternion.Euler(90, 90, 0);
+                    rotation = Quaternion.Euler(90, -90, 0);
                 else
                     rotation = Quaternion.Euler(-90, -90, 0);
 
-                position = new Vector3(midPoint, 0.5f, edge.start.y - (tileSize / 2));
+                position = new Vector3(edge.start.x - (tileSize / 2), 0.5f, midPoint);
             }
 
             obj = GameObject.Instantiate(wallPrefab, position, rotation);
             obj.transform.localScale = new Vector3(size * 0.1f, 1f, 0.1f);
             obj.transform.parent = this.transform;
-            obj.name = $"Wall_{edge.face}";
-        }
-    }
-    private void MarksSpawnWalls(List<Edge> merged)
-    {
-        var parentWalls = new GameObject("Walls");
-        parentWalls.transform.SetParent(transform, false);
-
-        foreach (var e in merged)
-        {
-            bool horizontal = (e.start.y == e.end.y);
-
-            // Length in grid units
-            float gridLength = horizontal
-                ? Mathf.Abs(e.end.x - e.start.x)
-                : Mathf.Abs(e.end.y - e.start.y);
-
-            // Midpoint in grid coords
-            float midX = (e.start.x + e.end.x) * 0.5f;
-            float midY = (e.start.y + e.end.y) * 0.5f;
-
-            // Convert grid → world (x,z plane)
-            Vector3 worldPos = new Vector3(
-                midX * tileSize,
-                0f,
-                midY * tileSize
-            );
-
-            Quaternion rot = horizontal
-                ? Quaternion.Euler(0f, 0f, 0f)     // along world X
-                : Quaternion.Euler(0f, 90f, 0f);   // along world Z
-
-            var wall = Instantiate(wallPrefab, worldPos, rot, parentWalls.transform);
-
-            // Scale so X dimension covers length * tileSize
-            Vector3 s = wall.transform.localScale;
-            s.x = gridLength * tileSize;
-            wall.transform.localScale = s;
+            obj.name = $"Wall_{face}_{edge.start.x}_{edge.start.y}_to_{edge.end.x}_{edge.end.y}";
         }
     }
 
