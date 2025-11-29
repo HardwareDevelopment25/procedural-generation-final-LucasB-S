@@ -365,7 +365,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   textureSize: 256
   scale: 50
-  LevelOfDetail: 4
+  LevelOfDetail: 1
   falloffCurve:
     serializedVersion: 2
     m_Curve:
@@ -379,14 +379,14 @@ MonoBehaviour:
       inWeight: 0
       outWeight: 0.43516424
     - serializedVersion: 3
-      time: 0.5852775
-      value: 0.11343977
-      inSlope: 0.85454607
-      outSlope: 0.85454607
+      time: 0.6433562
+      value: 0.15675019
+      inSlope: 0.98967457
+      outSlope: 0.98967457
       tangentMode: 0
       weightedMode: 0
       inWeight: 0.33333334
-      outWeight: 1
+      outWeight: 0.19324683
     - serializedVersion: 3
       time: 1.0041199
       value: 1

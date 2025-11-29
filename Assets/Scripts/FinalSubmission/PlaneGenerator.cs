@@ -1,16 +1,21 @@
 using System;
 using UnityEngine;
 
-public class TextureGenerator : MonoBehaviour
+public class PlaneGenerator : MonoBehaviour
 {
-
+    [Range(64, 512)]
     public int textureSize = 256;
+
+    [Range(1, 100)]
     public float scale;
+
     [Range(1, 10)]
     public int LevelOfDetail = 1;
 
     private Texture2D texture;
     private float[,] finalMap;
+
+    public int seed;
 
     [SerializeField]
     public AnimationCurve falloffCurve = new AnimationCurve();
@@ -81,9 +86,9 @@ public class TextureGenerator : MonoBehaviour
 
     public void CreateLayeredPerlinPatteren()
     {
-        float[,] nm = NoiseMapGenerator.GenerateNoiseMap(textureSize, textureSize, scale, 6, 2f, 0.5f, 42, Vector2.zero);
+        float[,] nm = NoiseMapGenerator.GenerateNoiseMap(textureSize, textureSize, scale, 6, 2f, 0.5f, seed, Vector2.zero);
         float[,] falloffMap = NoiseMapGenerator.GenerateFalloffMap(textureSize, falloffCurve);
-        
+
         finalMap = new float[textureSize, textureSize];
         for (int x = 0; x < textureSize; x++)
         {
@@ -116,3 +121,4 @@ public class TextureGenerator : MonoBehaviour
         texture.Apply();
     }
 }
+
