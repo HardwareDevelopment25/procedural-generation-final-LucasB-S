@@ -164,8 +164,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   edges: []
-  mapWidth: 20
-  mapHeight: 20
+  mapWidth: 100
+  mapHeight: 100
   mapBorder: 2
   maxDepth: 5
   minLeafSize: 5

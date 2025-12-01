@@ -159,7 +159,7 @@ MonoBehaviour:
   tileSize: 1
   corridorWidth: 1
   BiasToLongerRooms: 0.5
-  floorMat: {fileID: 0}
+  floorMat: {fileID: 2100000, guid: 5347d6d23fd98f142a32df102eda8e56, type: 2}
 --- !u!4 &649812249
 Transform:
   m_ObjectHideFlags: 0

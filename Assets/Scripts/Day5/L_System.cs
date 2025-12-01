@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class L_System : MonoBehaviour
 {
@@ -18,12 +19,17 @@ public class L_System : MonoBehaviour
     public string axiom;
     public Dictionary<char, string> recursionRules = new();
     private Stack<TransformData> transformData = new();
-
+    public List<Vector3> positions;
+    private LineRenderer lineRenderer;
+    public Material material;
     private void Awake()
     {
+        positions = new List<Vector3>(); 
         Turtle = this.gameObject;
         recursionRules.Add('X', "F+[[X]-X]-F[-FX]+X");
         recursionRules.Add('F', "FF");
+        lineRenderer = gameObject.AddComponent<LineRenderer>();
+        lineRenderer.material = material;
     }
 
     private void Start()
@@ -72,10 +78,11 @@ public class L_System : MonoBehaviour
                     // Move forward and draw a line using linereader component
                     Vector3 initialPosition = transform.position;
                     transform.Translate(Vector3.up * length);
-                    GameObject temp = Instantiate(prefab, transform.position, Quaternion.identity);
-                    var tempLR = temp.GetComponent<LineRenderer>();
-                    tempLR.SetPosition(0, initialPosition);
-                    tempLR.SetPosition(1, transform.position);
+                    positions.Add(transform.position);
+                   // GameObject temp = Instantiate(prefab, transform.position, Quaternion.identity);
+                  // var tempLR = temp.GetComponent<LineRenderer>();
+               //     tempLR.SetPosition(0, initialPosition);
+                 //   tempLR.SetPosition(1, transform.position);
 
                     break;
                 case '+':
@@ -106,5 +113,9 @@ public class L_System : MonoBehaviour
                     break;
             }
         }
+        lineRenderer.startWidth = 2f;
+        lineRenderer.endWidth = 2f;
+        lineRenderer.positionCount=positions.Count;
+        lineRenderer.SetPositions(positions.ToArray());
     }
 }
