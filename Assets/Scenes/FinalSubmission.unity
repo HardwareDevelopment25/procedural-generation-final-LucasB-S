@@ -671,7 +671,6 @@ GameObject:
   m_Component:
   - component: {fileID: 265718434}
   - component: {fileID: 265718433}
-  - component: {fileID: 265718432}
   - component: {fileID: 265718435}
   m_Layer: 0
   m_Name: Main Camera
@@ -680,14 +679,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!81 &265718432
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 265718431}
-  m_Enabled: 1
 --- !u!20 &265718433
 Camera:
   m_ObjectHideFlags: 0
@@ -4848,15 +4839,15 @@ MonoBehaviour:
     - serializedVersion: 3
       time: 0
       value: 0
-      inSlope: 0.10253182
-      outSlope: 0.10253182
+      inSlope: 0.07590747
+      outSlope: 0.07590747
       tangentMode: 34
       weightedMode: 0
       inWeight: 0
       outWeight: 0.33333334
     - serializedVersion: 3
-      time: 0.66146994
-      value: 0.06782172
+      time: 0.6739669
+      value: 0.05115912
       inSlope: 0.007418916
       outSlope: 0.007418916
       tangentMode: 0
@@ -4866,8 +4857,8 @@ MonoBehaviour:
     - serializedVersion: 3
       time: 1
       value: 1
-      inSlope: 2.7536056
-      outSlope: 2.7536056
+      inSlope: 2.9102592
+      outSlope: 2.9102592
       tangentMode: 34
       weightedMode: 0
       inWeight: 0.33333334
