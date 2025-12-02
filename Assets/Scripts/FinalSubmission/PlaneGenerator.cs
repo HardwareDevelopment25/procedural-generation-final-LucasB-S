@@ -1,5 +1,8 @@
+using NUnit.Framework.Internal;
 using System;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlaneGenerator : MonoBehaviour
 {
@@ -15,10 +18,21 @@ public class PlaneGenerator : MonoBehaviour
     private Texture2D texture;
     private float[,] finalMap;
 
+    [SerializeField] private int defaultSeed = 0;
     public int seed;
 
     [SerializeField]
     public AnimationCurve falloffCurve = new AnimationCurve();
+
+    MeshFilter meshFilter;
+
+    [SerializeField] private TextMeshProUGUI IslandSizeVal;
+    [SerializeField] private TextMeshProUGUI IslandNormalMapScaleVal;
+    [SerializeField] private TextMeshProUGUI IslandLODMultiplierVal;
+    [SerializeField] private Toggle RegenCloudsWithIsland;
+    [SerializeField] private TMP_InputField islandSeed;
+
+    [SerializeField] private RandomCloudDistrobution Clouds;
 
     [System.Serializable]
     public struct TerrainType
@@ -32,11 +46,12 @@ public class PlaneGenerator : MonoBehaviour
 
     private void Start()
     {
+        seed = defaultSeed;
         texture = new Texture2D(textureSize, textureSize);
 
         CreateLayeredPerlinPatteren();
 
-        MeshFilter meshFilter = gameObject.AddComponent<MeshFilter>();
+        meshFilter = gameObject.AddComponent<MeshFilter>();
         meshFilter.mesh = MeshGenerator.GenerateGridMesh(finalMap, 10, falloffCurve, LevelOfDetail).CreateMesh();
 
         GetComponent<MeshRenderer>().material.mainTexture = texture;
@@ -98,7 +113,6 @@ public class PlaneGenerator : MonoBehaviour
             }
         }
 
-
         for (int x = 0; x < texture.width; x++)
         {
             for (int y = 0; y < texture.height; y++)
@@ -119,6 +133,49 @@ public class PlaneGenerator : MonoBehaviour
         }
 
         texture.Apply();
+    }
+
+    public void ReGenerate()
+    {
+        if (IslandSizeVal != null)
+            textureSize = int.Parse(IslandSizeVal.text);
+        else
+            Debug.Log("IslandSize is empty");
+
+        if (IslandNormalMapScaleVal != null)
+            scale = int.Parse(IslandNormalMapScaleVal.text);
+        else
+            Debug.Log("IslandNormalMapScale is empty");
+
+        if (IslandLODMultiplierVal != null)
+            LevelOfDetail = int.Parse(IslandLODMultiplierVal.text);
+        else
+            Debug.Log("CloudCountUIVal is empty");
+
+        if (islandSeed != null)
+        {
+            seed = int.Parse(islandSeed.text);
+        }
+        else
+        {
+            seed = defaultSeed;
+            Debug.Log("CloudSeed is empty");
+        }
+
+        texture = new Texture2D(textureSize, textureSize);
+
+        CreateLayeredPerlinPatteren();
+
+        meshFilter.mesh = new Mesh();
+        meshFilter.mesh = MeshGenerator.GenerateGridMesh(finalMap, 10, falloffCurve, LevelOfDetail).CreateMesh();
+
+        GetComponent<MeshRenderer>().material.mainTexture = texture;
+
+        if (RegenCloudsWithIsland == null)
+            Debug.Log("CloudCountUIVal is empty");
+        else
+            if (RegenCloudsWithIsland.isOn)
+                Clouds.ReGenerate();
     }
 }
 

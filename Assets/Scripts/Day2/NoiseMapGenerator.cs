@@ -49,7 +49,6 @@ public class NoiseMapGenerator
                     noiseHeight += perlinValue * amplitude;
                     amplitude *= persistance;
                     frequency *= lacunarity;
-
                 }
 
                 // Update min and max noise heights

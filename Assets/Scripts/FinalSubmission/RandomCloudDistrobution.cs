@@ -35,8 +35,6 @@ public class RandomCloudDistrobution : MonoBehaviour
     {
         seed = defaultSeed;
         rand = new System.Random(seed);
-        mapWidth = Island.textureSize;
-        mapLength = Island.textureSize;
     }
 
     private void Start()
@@ -54,6 +52,8 @@ public class RandomCloudDistrobution : MonoBehaviour
 
     private void Generate()
     {
+        mapWidth = Island.textureSize;
+        mapLength = Island.textureSize;
         this.transform.position = new Vector3(0, 0, 0);
 
         if(CloudCount != positions.Count || RandomCloudPos)
@@ -73,7 +73,7 @@ public class RandomCloudDistrobution : MonoBehaviour
                         Debug.Log("RandomCloudPos is empty");
                     else
                         if(!RandomCloudPos.isOn)
-                            candidate =  new Vector2Int(((seed + 1) * i * 10) % mapWidth, ((seed + 1) * j * 10) % mapLength);
+                            candidate =  new Vector2Int(((seed + 10) * i * 10) % mapWidth, ((seed + 10) * j * 10) % mapLength);
 
                     Vector2Int closestSample = FindClosestSample(candidate);
                     float distance = Vector2Int.Distance(candidate, closestSample);
